@@ -8,7 +8,7 @@ from helpers import get_count, get_ufos
 
 app = Flask(__name__)
 
-client = MongoClient('YOUR_CONNECTION_STRING')
+client = MongoClient('mongodb://db:27017/ufos')
 db = client['ufos']
 ufos = db.ufos
 
@@ -118,4 +118,4 @@ def submit():
     return render_template("thank_you.html")
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0', port=5000)

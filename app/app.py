@@ -8,7 +8,8 @@ from helpers import get_count, get_ufos
 
 app = Flask(__name__)
 
-client = MongoClient('mongodb://db:27017/ufos')
+mongo_uri = os.getenv('MONGO_URI', 'mongodb://db:27017/ufos')
+client = MongoClient(mongo_uri)
 db = client['ufos']
 ufos = db.ufos
 

@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ufo-spotter-config
+  namespace: ufo-spotter
+data:
+  MONGO_URI: "mongodb://mongo.default.svc.cluster.local:27017/ufos"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ufo-spotter-secret
+  namespace: ufo-spotter
+type: Opaque
+data:
+  mongo-root-username: YWRtaW4=
+  mongo-root-password: cGFzc3dvcmQ=
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ufo-spotter-deployment
+  namespace: ufo-spotter
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: ufo-spotter
+  template:
+    metadata:
+      labels:
+        app: ufo-spotter
+    spec:
+      containers:
+        - name: ufo-spotter
+          image: nasquez23/ufo-spotter:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: MONGO_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: ufo-spotter-config
+                  key: MONGO_URI
